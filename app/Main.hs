@@ -1,18 +1,18 @@
 module Main where
 
-import Control.Concurrent
-import Control.Concurrent.Async
-import Control.Concurrent.STM.TQueue
-import Control.Monad
-import Control.Monad.STM
-import Data.ByteString.Char8  (unpack)
-import Data.ByteString.Lazy.Char8   (pack)
-import Data.Foldable
-import Data.Semigroup
-import Network.TcpServer
+import           Control.Concurrent
+import           Control.Concurrent.Async
+import           Control.Concurrent.STM.TQueue
+import           Control.Monad
+import           Control.Monad.STM
+import           Data.ByteString.Char8         (unpack)
+import           Data.ByteString.Lazy.Char8    (pack)
+import           Data.Foldable
+import           Data.Semigroup
 
+import           Network.TcpServer
 
-import Lib
+import           Lib
 
 debugResponse = dummyData "abc\ndef\nghi\njkl"
 
@@ -20,27 +20,18 @@ dummyData :: String -> [String]
 dummyData = cycle . map (filter (/= '\r')) . lines
 
 recvLoop :: Transport -> TQueue () -> IO ()
-recvLoop peer queue = go
+recvLoop peer queue = forever $ transportRecv peer >>= traverse kick . filter (== '\r') . unpack
   where
-    go = do
-        msg <- transportRecv peer
-        traverse kick . filter (== '\r') . unpack $ msg
-        go
-
     kick _ = atomically $ writeTQueue queue ()
 
 sendLoop :: Transport -> TQueue () -> [String] -> IO ()
-sendLoop peer queue responses = go responses
-  where
-    go (r:rs) = do
-        _ <- atomically $ readTQueue queue
-        transportSend peer $ pack (r <> "\r\n")
-        go rs
+sendLoop peer queue responses = forM_ responses $ \r -> do
+    atomically $ readTQueue queue
+    transportSend peer $ pack (r <> "\r\n")
 
 keyenceUplinkEmuHandler :: [String] -> ThreadMap -> Transport -> IO ()
-keyenceUplinkEmuHandler responses _ peer = do
-    queue <- newTQueueIO
-    race_ (recvLoop peer queue) (sendLoop peer queue responses)
+keyenceUplinkEmuHandler responses _ peer = newTQueueIO
+    >>= \q -> race_ (recvLoop peer q) (sendLoop peer q responses)
 
 startKeyenceUplinkEmu :: [String] -> IO TcpServer
 startKeyenceUplinkEmu responses = newTcpServer 8501 $ keyenceUplinkEmuHandler responses
