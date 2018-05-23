@@ -29,15 +29,15 @@ sendLoop peer queue responses = forM_ responses $ \r -> do
     atomically $ readTQueue queue
     transportSend peer $ pack (r <> "\r\n")
 
-keyenceUplinkEmuHandler :: [String] -> ThreadMap -> Transport -> IO ()
-keyenceUplinkEmuHandler responses _ peer = newTQueueIO
+keyenceHostLinkEmuHandler :: [String] -> ThreadMap -> Transport -> IO ()
+keyenceHostLinkEmuHandler responses _ peer = newTQueueIO
     >>= \q -> race_ (recvLoop peer q) (sendLoop peer q responses)
 
-startKeyenceUplinkEmu :: [String] -> IO TcpServer
-startKeyenceUplinkEmu responses = newTcpServer 8501 $ keyenceUplinkEmuHandler responses
+startKeyenceHostLinkEmu :: [String] -> IO TcpServer
+startKeyenceHostLinkEmu responses = newTcpServer 8501 $ keyenceHostLinkEmuHandler responses
 
 main :: IO ()
 main = do
-    -- startKeyenceUplinkEmu debugResponse
-    getContents >>= startKeyenceUplinkEmu . dummyData
+    -- startKeyenceHostlinkEmu debugResponse
+    getContents >>= startKeyenceHostLinkEmu . dummyData
     forever $ threadDelay 1000000000
