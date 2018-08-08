@@ -36,7 +36,11 @@ executables:
     dependencies:
     - keyence-uplink-emu
     - async
+    - attoparsec
     - bytestring
+    - conduit
+    - conduit-extra
+    - data-default-class
     - stm
     - tcp-server
 

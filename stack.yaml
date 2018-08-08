@@ -15,7 +15,7 @@
 # resolver:
 #  name: custom-snapshot
 #  location: "./custom-snapshot.yaml"
-resolver: nightly-2018-04-18
+resolver: lts-12.5
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -44,7 +44,9 @@ packages:
 # extra-deps: []
 extra-deps:
 - git: https://github.com/nshimaza/tcp-server.git
-  commit: f4929f671eddba6499568f0124676cd5b0c6806f
+  commit: 146098b602cdf205b30aeb00cd5dcd6953360eae
+- git: https://github.com/nshimaza/async-supervisor.git
+  commit: 1b32dd4d74e13021a4d5c67d1ec9361d7586464c
 #
 # Override default flag values for local packages and extra-deps
 # flags: {}
