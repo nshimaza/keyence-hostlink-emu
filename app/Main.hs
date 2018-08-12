@@ -24,11 +24,12 @@ import           Control.Concurrent               (threadDelay)
 import           Control.Concurrent.Async         (race_)
 import           Control.Concurrent.STM.TQueue    (TQueue, newTQueueIO,
                                                    readTQueue, writeTQueue)
-import           Control.Monad                    (forever)
+import           Control.Monad                    (forever, unless)
 import           Control.Monad.STM                (atomically)
 import           Data.Attoparsec.ByteString       (word8)
 import           Data.Attoparsec.ByteString.Char8 (Parser, decimal, option,
                                                    string)
+import qualified Data.ByteString                  as B (null)
 import           Data.ByteString.Char8            (unpack)
 import           Data.ByteString.Lazy             (ByteString)
 import           Data.ByteString.Lazy.Char8       (pack)
@@ -139,7 +140,11 @@ type ConduitParserResult = Either ParseError (PositionRange, HostLinkCommand)
 recvLoop :: Transport t => t -> TQueue ConduitParserResult -> IO ()
 recvLoop peer queue = runConduit $ src .| conduitParserEither hostLinkCommand .| sink
   where
-    src = forever $ liftIO (recv peer) >>= yield
+    src = do
+        msg <- liftIO (recv peer)
+        unless (B.null msg) $ do
+            yield msg
+            src
     sink = do
         maybeParsed <- await
         liftIO $ print maybeParsed
