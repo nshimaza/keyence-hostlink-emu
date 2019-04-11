@@ -1,5 +1,5 @@
 # keyence-uplink-emu
-Super tiny emulator of Keyence uplink protocol
+Super tiny emulator of Keyence HostLink protocol
 
 ## Usage
 
