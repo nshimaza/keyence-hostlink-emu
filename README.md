@@ -21,3 +21,6 @@ The emulator listens TCP port 8501 and returns a line from stdin on receiving RD
 
 The emulator only recognizes RD command and RDS command.  Any other commands result parse error.
 On parse error, the emulator disconnects the session without recovering the parse error within the same TCP session.
+
+Protocol specification can be found in manual for Keyence KV-7500 and EtherNet/IP modules.
+Web site of Keyence is [https://www.keyence.co.jp/](https://www.keyence.co.jp/).
