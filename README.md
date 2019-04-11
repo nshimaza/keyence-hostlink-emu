@@ -1,6 +1,16 @@
 # keyence-uplink-emu
 Super tiny emulator of Keyence HostLink protocol
 
+## Build
+
+You need [stack](https://docs.haskellstack.org/en/stable/README/) to build.
+
+```shell-session
+git clone https://github.com/nshimaza/keyence-hostlink-emu.git
+cd keyence-hostlink-emu
+stack build
+```
+
 ## Usage
 
 ```
