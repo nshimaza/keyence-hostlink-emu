@@ -44,9 +44,9 @@ packages:
 # extra-deps: []
 extra-deps:
 - git: https://github.com/nshimaza/tcp-server.git
-  commit: 146098b602cdf205b30aeb00cd5dcd6953360eae
+  commit: 668903887295306a5b4dbb7d967d8fa0aeb588e4
 - git: https://github.com/nshimaza/async-supervisor.git
-  commit: 1b32dd4d74e13021a4d5c67d1ec9361d7586464c
+  commit: d6f84705ca95592733b9abc2f4e1d987a9ff3b98
 #
 # Override default flag values for local packages and extra-deps
 # flags: {}
