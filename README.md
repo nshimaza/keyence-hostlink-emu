@@ -14,7 +14,7 @@ stack build
 ## Usage
 
 ```
-.stack-work/install/x86_64-osx/lts-13.17/8.6.4/bin/keyence-uplink-emu-exe < sample-response.txt
+.stack-work/install/x86_64-osx/lts-13.20/8.6.5/bin/keyence-uplink-emu-exe < sample-response.txt
 ```
 
 The emulator listens TCP port 8501 and returns a line from stdin on receiving RD command or RDS command.
